@@ -121,3 +121,123 @@ class ListaDupla:
 		self.__iteravel = iteravel
 		for objeto in self.__iteravel:
 			self.anexar(objeto)
+
+	def inserir(self,indice,valor):
+		self.__indice = indice
+		self.__valor = valor
+		self.__novono = Knot(self.__valor,None,None,self.__indice)
+		finder = self.__cabeca.proximo
+		if (finder is None):
+			self.anexar(self.__valor)
+		else:
+			while not(finder is None) and (finder.indice != self.__indice):
+				finder = finder.proximo
+			if (finder is None):
+				self.anexar(self.__valor)
+			else:
+				if (finder.indice == self.__indice):
+					self.__noanterior = finder.anterior
+					self.__noanterior.proximo = self.__novono
+					self.__novono.anterior = self.__noanterior
+					self.__novono.proximo = finder
+					finder.anterior = self.__novono
+					aux = finder
+					while not(aux is None):
+						aux.indice = ((aux.indice) + 1)
+						aux = aux.proximo
+
+	def tirar(self,indice = None):
+		self.__indice = indice
+		if (self.__indice == None):
+			self.__indice = self.__rabo.indice
+		finder = self.__cabeca.proximo
+		if (finder is None):
+			raise KeyError
+		else:
+			while not(finder is None) and (finder.indice != self.__indice):
+				finder = finder.proximo
+			if (finder is None):
+				raise KeyError
+			else:
+				guarda = finder
+				self.__noanterior = finder.anterior
+				self.__noposterior = finder.proximo
+				if not(finder.proximo is None):
+					self.__noanterior.proximo = self.__noposterior
+					self.__noposterior.anterior = self.__noanterior
+					aux = self.__noposterior
+					while not(aux is None):
+						aux.indice = ((aux.indice) - 1)
+						aux = aux.proximo
+					return guarda.objeto
+					del finder
+				else:
+					self.__noanterior.proximo = None
+					self.__rabo = self.__noanterior
+					return guarda.objeto
+					del finder
+										
+	def trocar(self,indice1,indice2):
+		a = self.tirar(indice1)
+		b = self.tirar(indice2 - 1)
+		self.inserir(indice1,b)
+		self.inserir(indice2,a)
+
+
+	def remover(self,valor):
+		self.__valor = valor
+		valor_finder = self.__cabeca.proximo
+		if (valor_finder is None):
+			raise ValueError
+		else:
+			while not(valor_finder is None) and (valor_finder.objeto != self.__valor):
+				valor_finder = valor_finder.proximo
+			if (valor_finder is None):
+				raise ValueError
+			else:
+				if (valor_finder.objeto == self.__valor):
+					self.tirar(valor_finder.indice)
+
+	def eliminar(self,valor):
+		self.__valor = valor
+		valor_finder = self.__cabeca.proximo
+		self.__flag = 0
+		if (valor_finder is None):
+			raise ValueError
+		else:
+			while not(valor_finder is None):
+				if (valor_finder.objeto == self.__valor):
+					self.tirar(valor_finder.indice)
+					self.__flag += 1
+				valor_finder = valor_finder.proximo
+			if (self.__flag == 0):
+				raise ValueError
+
+	def copiar(self):
+		return self
+
+	def __contains__(self,valor):
+		self.__valor = valor
+		valor_finder = self.__cabeca.proximo
+		if (valor_finder is None):
+			return False
+		else:
+			while not(valor_finder is None) and (valor_finder.objeto != self.__valor):
+				valor_finder = valor_finder.proximo
+			if (valor_finder is None):
+				return False
+			else:
+				if (valor_finder.objeto == self.__valor):
+					return True
+
+def concatenar(lista1,lista2):
+	listasaida = ListaDupla()
+	indexer = 0
+	for item in range(len(lista1)):
+		listasaida.anexar(lista1[indexer])
+		indexer += 1
+	indexer = 0
+	for item in range(len(lista2)):
+		listasaida.anexar(lista2[indexer])
+		indexer += 1
+	return listasaida

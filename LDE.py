@@ -37,6 +37,9 @@ class ListaDupla:
 			for self.__x in self.__iteravel:
 				self.anexar(self.__x)
 
+	def getPrimeiro(self):
+		return self.__cabeca.proximo
+
 	def anexar(self,item):
 		self.__item = item
 		self.__novono = Knot(self.__item,None,None,0)
@@ -230,7 +233,28 @@ class ListaDupla:
 				if (valor_finder.objeto == self.__valor):
 					return True
 
+#QUESTAO 2 ##############################################
+class Ponteiro:
+
+	def __init__(self,listad):
+		self.__listad = listad
+		self.__apontador = self.__listad.getPrimeiro()
+
+	def __iter__(self):
+		if not (self.__apontador is None):
+			return self.__apontador.objeto
+		else:
+			raise StopIteration
+						
+	def __next__(self):
+		self.__apontador = self.__apontador.proximo
+					
+#########################################################
+		
 def concatenar(lista1,lista2):
+	'''
+	Funcao fora das classes; tem que importar separado: from LDE import concatenar
+	'''
 	listasaida = ListaDupla()
 	indexer = 0
 	for item in range(len(lista1)):
@@ -241,3 +265,4 @@ def concatenar(lista1,lista2):
 		listasaida.anexar(lista2[indexer])
 		indexer += 1
 	return listasaida
+
